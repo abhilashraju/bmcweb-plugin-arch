@@ -18,10 +18,10 @@ public:
     return "Registering Dump routes";
   }
   void registerDumpRutes([[maybe_unused]]crow::App &app) {
-    BMCWEB_ROUTE(app, "/redfish/v1/Managers/bmc/LogServices/")
-        // .privileges(redfish::privileges::getLogServiceCollection)
-        .methods(boost::beast::http::verb::get)(
-            std::bind_front(handleBMCLogServicesCollectionGet, std::ref(app)));
+    // BMCWEB_ROUTE(app, "/redfish/v1/Managers/bmc/LogServices/")
+    //     // .privileges(redfish::privileges::getLogServiceCollection)
+    //     .methods(boost::beast::http::verb::get)(
+    //         std::bind_front(handleBMCLogServicesCollectionGet, std::ref(app)));
     
 
     BMCWEB_ROUTE(
