@@ -1,7 +1,7 @@
 #include "router-plugin.h"
 
-// #include "registries/privilege_registry.hpp"
-//#include "query.hpp"
+#include "registries/privilege_registry.hpp"
+#include "query.hpp"
 #include <app.hpp>
 #include <nlohmann/json.hpp>
 #include <utils/json_utils.hpp>
@@ -13,7 +13,8 @@ class MyDumpRouterPlugin : public RouterPlugin {
 
 public:
   MyDumpRouterPlugin() {}
-  std::string registerRoutes(crow::App &app) {
+  std::string registerRoutes(crow::App &app,sdbusplus::asio::connection* conn) {
+    crow::connections::systemBus=conn;
     registerDumpRutes(app);
     return "Registering Dump routes";
   }
@@ -23,11 +24,11 @@ public:
     //     .methods(boost::beast::http::verb::get)(
     //         std::bind_front(handleBMCLogServicesCollectionGet, std::ref(app)));
     
-
+    
     BMCWEB_ROUTE(
         app,
         "/redfish/v1/Managers/bmc/LogServices/Dump/Entries/<str>/attachment/")
-        // .privileges(redfish::privileges::getLogEntry)
+        .privileges(redfish::privileges::getLogEntry)
         .methods(boost::beast::http::verb::get)([app=std::ref(app)](const crow::Request& req,
             const std::shared_ptr<bmcweb::AsyncResp>& asyncResp,
             const std::string& dumpId){
@@ -36,13 +37,13 @@ public:
     BMCWEB_ROUTE(
         app,
         "/redfish/v1/Managers/bmc/LogServices/Dump/Entries/<str>/<str>/attachment/")
-        // .privileges(redfish::privileges::getLogEntry)
+        .privileges(redfish::privileges::getLogEntry)
         .methods(boost::beast::http::verb::get)(std::bind_front(
             handleLogServicesDumpEntryDownloadGet, std::ref(app), "BMC"));
     BMCWEB_ROUTE(
         app,
         "/redfish/v1/Managers/bmc/LogServices/Dump/Entries/<str>/<str>/<str>/attachment/")
-        // .privileges(redfish::privileges::getLogEntry)
+        .privileges(redfish::privileges::getLogEntry)
         .methods(boost::beast::http::verb::get)(std::bind_front(
             handleLogServicesDumpEntryDownloadGetPart, std::ref(app), "BMC"));
   }
@@ -51,10 +52,10 @@ static inline void handleLogServicesDumpEntryDownloadGet(
     const std::shared_ptr<bmcweb::AsyncResp>& asyncResp,
     const std::string& dumpId,const std::string& offset)
 {
-    // if (!redfish::setUpRedfishRoute(app, req, asyncResp))
-    // {
-    //     return;
-    // }
+    if (!redfish::setUpRedfishRoute(app, req, asyncResp))
+    {
+        return;
+    }
     downloadDumpEntry(asyncResp, dumpId, dumpType,offset);
 }
 static inline void handleLogServicesDumpEntryDownloadGetPart(
@@ -62,10 +63,10 @@ static inline void handleLogServicesDumpEntryDownloadGetPart(
     const std::shared_ptr<bmcweb::AsyncResp>& asyncResp,
     const std::string& dumpId,const std::string& offset,const std::string& size)
 {
-    // if (!redfish::setUpRedfishRoute(app, req, asyncResp))
-    // {
-    //     return;
-    // }
+    if (!redfish::setUpRedfishRoute(app, req, asyncResp))
+    {
+        return;
+    }
     std::string dumpEntryPath =
         sdbusplus::message::object_path("/tmp") /
         dumpId;

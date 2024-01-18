@@ -94,7 +94,7 @@ static int run()
     auto interfaces = db.getInterFaces<bmcweb::RouterPlugin>();
     for (auto &plugin : interfaces) {
       BMCWEB_LOG_INFO("Registering plugin ");
-      BMCWEB_LOG_INFO("{}", plugin->registerRoutes(app));
+      BMCWEB_LOG_INFO("{}", plugin->registerRoutes(app,crow::connections::systemBus));
     }
     app.run();
     io->run();

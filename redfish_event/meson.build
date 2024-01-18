@@ -15,6 +15,7 @@ redfish_event_sources = [
     'src/redfish_event.cpp',
     '../src/json_utils.cpp',
     '../src/error_messages.cpp',
+    '../src/dbus_singleton.cpp'
 ]
 
 

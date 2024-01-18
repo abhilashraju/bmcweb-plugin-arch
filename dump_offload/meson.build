@@ -15,6 +15,7 @@ dump_offload_sources = [
     'src/dump_offload.cpp',
     '../src/json_utils.cpp',
     '../src/error_messages.cpp',
+    '../src/dbus_singleton.cpp'
 ]
 
 core_includes = include_directories(['.',

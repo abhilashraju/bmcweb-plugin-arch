@@ -51,13 +51,15 @@ class MyRouterPlugin : public RouterPlugin {
 
 public:
   MyRouterPlugin() {}
-  std::string registerRoutes(crow::App &app) {
+  std::string registerRoutes(crow::App &app,sdbusplus::asio::connection* conn) {
+    crow::connections::systemBus=conn;
     registerSubscriberUrl(app);
     requestRoutesSubmitTestEvent(app);
     registerTestRoutes(app);
     return "Registering aggregator routes";
   }
   void registerTestRoutes([[maybe_unused]]crow::App &app) {
+    
     CLIENT_LOG_INFO("registerTestRoutes");
     // const char* url = "/redfish/v1/Test/";
     
@@ -72,6 +74,7 @@ public:
             });
   }
   void registerSubscriberUrl(crow::App &app) {
+   
     CLIENT_LOG_INFO("registerSubscriberUrl");
     BMCWEB_ROUTE(app, "/redfish/v2/EventService/Subscriptions/")
         // .privileges(redfish::privileges::postEventDestinationCollection)
