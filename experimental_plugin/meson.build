@@ -11,10 +11,13 @@ if not nghttp2.found()
   nghttp2 = nghttp2_ex.dependency('nghttp2')
 endif
 
-redfish_event_sources = [
-    'src/redfish_event.cpp',
+
+pluginname='experimental_plugin'
+plugin_sources = [
+    'src/experimental_plugin.cpp',
     '../src/json_utils.cpp',
     '../src/error_messages.cpp',
+    '../src/dbus_singleton.cpp'
 ]
 
 
@@ -27,16 +30,16 @@ core_includes = include_directories(['.',
 '../plugin-ifaces'])
 
 
-redfish_event_deps = [
+plugin_deps = [
 json_dep,boost_dep,openssl_dep
 ]
 
 
 
-redfish_event = library('redfish_event', 
-    sources : redfish_event_sources,
+library(pluginname, 
+    sources : plugin_sources,
     include_directories : core_includes,
-    dependencies : [redfish_event_deps,nghttp2],
+    dependencies : [plugin_deps,nghttp2],
     cpp_args : WEB_ARGS,
     link_with : [])
     

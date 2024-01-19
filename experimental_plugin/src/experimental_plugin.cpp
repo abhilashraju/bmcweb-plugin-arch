@@ -1,14 +1,16 @@
+#include "registries/privilege_registry.hpp"
 #include "router-plugin.h"
 #include <iostream>
 #include <memory>
 namespace redfish {
 using namespace bmcweb;
-using namespace reactor;
+
 class MyRouterPlugin : public RouterPlugin {
 
 public:
     MyRouterPlugin() {}
-    std::string registerRoutes(crow::App &app) {
+    std::string registerRoutes(crow::App &app,sdbusplus::asio::connection* conn) {
+        crow::connections::systemBus=conn;
         registerTestRoutes(app);
         return "Registering Test routes";
     }
@@ -19,7 +21,7 @@ public:
             .methods(boost::beast::http::verb::post)(
                 []([[maybe_unused]] const crow::Request & /*unused*/,
                     [[maybe_unused]] const std::shared_ptr<bmcweb::AsyncResp> &asyncResp) {
-                CLIENT_LOG_INFO("called registerTestRoutes");
+                BMCWEB_LOG_INFO("called registerTestRoutes");
                 asyncResp->res.jsonValue = {{"Test", "Test"}};
                 });
     }

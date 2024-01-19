@@ -59,7 +59,7 @@ web_includes = include_directories(['include','subprojects/bmcweb/',
 
 subdir('redfish_event')
 subdir('dump_offload')
-
+subdir('experimental_plugin')
 executable(
   'web',
   [
