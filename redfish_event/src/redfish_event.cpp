@@ -55,24 +55,9 @@ public:
     crow::connections::systemBus=conn;
     registerSubscriberUrl(app);
     requestRoutesSubmitTestEvent(app);
-    registerTestRoutes(app);
     return "Registering aggregator routes";
   }
-  void registerTestRoutes([[maybe_unused]]crow::App &app) {
-    
-    CLIENT_LOG_INFO("registerTestRoutes");
-    // const char* url = "/redfish/v1/Test/";
-    
-    // app.template route<crow::black_magic::getParameterTag("/redfish/v1/Test/")>("/redfish/v1/Test/");
-    BMCWEB_ROUTE(app, "/redfish/v1/Test/")
-        // .privileges(redfish::privileges::postEventService)
-        .methods(boost::beast::http::verb::post)(
-            []([[maybe_unused]] const crow::Request & /*unused*/,
-                   [[maybe_unused]] const std::shared_ptr<bmcweb::AsyncResp> &asyncResp) {
-              CLIENT_LOG_INFO("called registerTestRoutes");
-              asyncResp->res.jsonValue = {{"Test", "Test"}};
-            });
-  }
+
   void registerSubscriberUrl(crow::App &app) {
    
     CLIENT_LOG_INFO("registerSubscriberUrl");

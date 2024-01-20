@@ -184,7 +184,7 @@ static void downloadEntryCallback(const std::shared_ptr<bmcweb::AsyncResp>& asyn
     }
     if (downloadEntryType == "System")
     {
-        if (!asyncResp->res.openBase64File(fd))
+        if (!asyncResp->res.openFd(fd))
         {
             messages::internalError(asyncResp->res);
             close(fd);
@@ -194,7 +194,7 @@ static void downloadEntryCallback(const std::shared_ptr<bmcweb::AsyncResp>& asyn
             boost::beast::http::field::content_transfer_encoding, "Base64");
         return;
     }
-    if (!asyncResp->res.openFile(fd))
+    if (!asyncResp->res.openFd(fd))
     {
         messages::internalError(asyncResp->res);
         close(fd);
